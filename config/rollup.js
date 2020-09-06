@@ -1,27 +1,32 @@
 import { join, sep } from 'path';
-import commonjs from 'rollup-plugin-commonjs';
+import commonjs from '@rollup/plugin-commonjs';
 import { eslint } from 'rollup-plugin-eslint';
-import json from 'rollup-plugin-json';
-import multiEntry from 'rollup-plugin-multi-entry';
 import externals from 'rollup-plugin-node-externals';
-import resolve from 'rollup-plugin-node-resolve';
-import replace from 'rollup-plugin-replace';
+import json from '@rollup/plugin-json';
+import multiEntry from '@rollup/plugin-multi-entry';
+import resolve from '@rollup/plugin-node-resolve';
+import replace from '@rollup/plugin-replace';
+import serve from 'rollup-plugin-serve';
 import typescript from 'rollup-plugin-typescript2';
-import yaml from 'rollup-plugin-yaml';
+import visualizer from 'rollup-plugin-visualizer';
+import yaml from '@rollup/plugin-yaml';
 
-const debug = process.env['DEBUG'] === 'TRUE';
+const flag_debug = process.env['DEBUG'] === 'TRUE';
+const flag_serve = process.env['SERVE'] === 'TRUE';
+
 const metadata = require('../package.json');
 
 const external = require('./rollup-external.json').names;
-const globals = require('./rollup-globals.json');
-const namedExports = require('./rollup-named.json');
-const stubNames = require('./rollup-stub.json').names;
-
-const passStub = 'require("pass-stub")';
-const stubs = stubNames.reduce((p, c) => (p[c] = passStub, p), {});
 
 const rootPath = process.env['ROOT_PATH'];
 const targetPath = process.env['TARGET_PATH'];
+
+const testModules = [
+	'chai',
+	'chai-as-promised',
+	'sinon',
+	'sinon-chai',
+];
 
 const bundle = {
 	external,
@@ -41,7 +46,15 @@ const bundle = {
 			return 'vendor';
 		}
 
-		if (id.includes(`${sep}node_modules${sep}`)) {
+		if (id.match(/node-resolve:/) || id.match(/virtual:/)) {
+			return 'vendor';
+		}
+
+		if (testModules.some(mod => id.includes(`${sep}${mod}${sep}`))) {
+			return 'test';
+		}
+
+		if (id.includes(`node_modules${sep}`)) {
 			return 'vendor';
 		}
 
@@ -49,12 +62,20 @@ const bundle = {
 			return 'index';
 		}
 
-		if (id.includes(`${sep}src${sep}`)) {
+		if (id.includes(`${sep}src${sep}`) || id.includes(`${sep}rules${sep}`)) {
 			return 'main';
 		}
 
-		if (debug) {
-			console.log('file belongs to no chunk', id);
+		if (id.includes(process.env['HOME'])) {
+			return 'linked';
+		}
+
+		if (id.length === 30 && id.match(/^[a-f0-9]+$/)) {
+			return 'vendor';
+		}
+
+		if (flag_debug) {
+			console.log('file does not belong to any chunk:', id);
 		}
 
 		return 'nochunk';
@@ -63,8 +84,9 @@ const bundle = {
 		dir: targetPath,
 		chunkFileNames: '[name].js',
 		entryFileNames: 'entry-[name].js',
+		exports: 'named',
 		format: 'cjs',
-		globals,
+		minifyInternalExports: false,
 		sourcemap: true,
 	},
 	plugins: [
@@ -76,14 +98,6 @@ const bundle = {
 			deps: true,
 			devDeps: false,
 			peerDeps: false,
-		}),
-		replace({
-			delimiters: ['require("', '")'],
-			values: stubs,
-		}),
-		replace({
-			delimiters: ['require(\'', '\')'],
-			values: stubs,
 		}),
 		replace({
 			delimiters: ['{{ ', ' }}'],
@@ -100,9 +114,7 @@ const bundle = {
 		resolve({
 			preferBuiltins: true,
 		}),
-		commonjs({
-			namedExports,
-		}),
+		commonjs(),
 		eslint({
 			configFile: join('.', 'config', 'eslint.json'),
 			exclude: [
@@ -112,16 +124,37 @@ const bundle = {
 				join('src', '**', '*.yml'),
 			],
 			include: [
-				join('**', '*.ts'),
+				join('src', '**', '*.ts'),
+				join('test', '**', '*.ts'),
 			],
 			throwOnError: true,
+			useEslintrc: false,
 		}),
 		typescript({
 			cacheRoot: join(targetPath, 'cache', 'rts2'),
 			rollupCommonJSResolveHack: true,
 		}),
+		visualizer({
+                        filename: join(rootPath, 'out', 'bundle-graph.html'),
+                        sourcemap: true,
+                }),
 	],
 };
+
+if (flag_serve) {
+	bundle.plugins.push(serve({
+		host: '0.0.0.0',
+		open: true,
+		verbose: true,
+		contentBase: [
+			join(rootPath, 'out'),
+			join(rootPath, 'resources'),
+		],
+		mimeTypes: {
+			'application/javascript': ['mjs'],
+		},
+	}));
+}
 
 export default [
 	bundle,
