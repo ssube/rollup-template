@@ -13,15 +13,15 @@ import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 import visualizer from 'rollup-plugin-visualizer';
 
-const { chunkMap } = require('./rollup/map.js');
+const { chunkMap } = require('./map.js');
 
 const flag_debug = process.env['DEBUG'] === 'TRUE';
 const flag_devel = process.env['NODE_ENV'] === 'production';
 const flag_serve = flag_devel || process.env['SERVE'] === 'TRUE';
 
-const metadata = require('../package.json');
-const chunks = require('./rollup/chunks.json');
-const external = require('./rollup/external.json').names;
+const metadata = require('../../package.json');
+const chunks = require('./chunks.json');
+const external = require('./external.json').names;
 
 const rootPath = process.env['ROOT_PATH'];
 const targetPath = process.env['TARGET_PATH'];
