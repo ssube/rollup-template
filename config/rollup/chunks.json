@@ -1,0 +1,37 @@
+{
+  "index": {
+    "includes": [
+      "/src/index"
+    ],
+    "match": []
+  },
+  "main": {
+    "includes": [
+      "/src/",
+      "/rules/"
+    ],
+    "match": []
+  },
+  "test": {
+    "includes": [
+      "/test/"
+    ],
+    "match": [
+      "node_modules/chai",
+      "node_modules/chai-as-promised",
+      "node_modules/sinon",
+      "node_modules/sinon-chai"
+    ]
+  },
+  "vendor": {
+    "includes": [
+      "node_modules/"
+    ],
+    "match": [
+      "commonjs-external",
+      "commonjsHelpers",
+      "node-resolve:",
+      "virtual:"
+    ]
+  }
+}

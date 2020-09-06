@@ -1,32 +1,30 @@
-import { join, sep } from 'path';
 import commonjs from '@rollup/plugin-commonjs';
-import { eslint } from 'rollup-plugin-eslint';
-import externals from 'rollup-plugin-node-externals';
 import json from '@rollup/plugin-json';
 import multiEntry from '@rollup/plugin-multi-entry';
+import polyfills from 'rollup-plugin-node-polyfills';
 import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
+import yaml from '@rollup/plugin-yaml';
+import { join } from 'path';
+import { eslint } from 'rollup-plugin-eslint';
+import externals from 'rollup-plugin-node-externals';
 import serve from 'rollup-plugin-serve';
+import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 import visualizer from 'rollup-plugin-visualizer';
-import yaml from '@rollup/plugin-yaml';
+
+const { chunkMap } = require('./rollup/map.js');
 
 const flag_debug = process.env['DEBUG'] === 'TRUE';
-const flag_serve = process.env['SERVE'] === 'TRUE';
+const flag_devel = process.env['NODE_ENV'] === 'production';
+const flag_serve = flag_devel || process.env['SERVE'] === 'TRUE';
 
 const metadata = require('../package.json');
-
-const external = require('./rollup-external.json').names;
+const chunks = require('./rollup/chunks.json');
+const external = require('./rollup/external.json').names;
 
 const rootPath = process.env['ROOT_PATH'];
 const targetPath = process.env['TARGET_PATH'];
-
-const testModules = [
-	'chai',
-	'chai-as-promised',
-	'sinon',
-	'sinon-chai',
-];
 
 const bundle = {
 	external,
@@ -37,49 +35,7 @@ const bundle = {
 			join(rootPath, 'test', '**', 'Test*.ts'),
 		],
 	},
-	manualChunks(id) {
-		if (id.includes(`${sep}test${sep}`)) {
-			return 'test';
-		}
-
-		if (id.match(/commonjs-external/i) || id.match(/commonjsHelpers/)) {
-			return 'vendor';
-		}
-
-		if (id.match(/node-resolve:/) || id.match(/virtual:/)) {
-			return 'vendor';
-		}
-
-		if (testModules.some(mod => id.includes(`${sep}${mod}${sep}`))) {
-			return 'test';
-		}
-
-		if (id.includes(`node_modules${sep}`)) {
-			return 'vendor';
-		}
-
-		if (id.includes(`${sep}src${sep}index`)) {
-			return 'index';
-		}
-
-		if (id.includes(`${sep}src${sep}`) || id.includes(`${sep}rules${sep}`)) {
-			return 'main';
-		}
-
-		if (id.includes(process.env['HOME'])) {
-			return 'linked';
-		}
-
-		if (id.length === 30 && id.match(/^[a-f0-9]+$/)) {
-			return 'vendor';
-		}
-
-		if (flag_debug) {
-			console.log('file does not belong to any chunk:', id);
-		}
-
-		return 'nochunk';
-	},
+	manualChunks: chunkMap(chunks, flag_debug),
 	output: {
 		dir: targetPath,
 		chunkFileNames: '[name].js',
@@ -130,31 +86,32 @@ const bundle = {
 			throwOnError: true,
 			useEslintrc: false,
 		}),
+		(flag_serve ? polyfills() : undefined),
 		typescript({
 			cacheRoot: join(targetPath, 'cache', 'rts2'),
 			rollupCommonJSResolveHack: true,
 		}),
+		terser({
+			keep_classnames: true,
+		}),
 		visualizer({
-                        filename: join(rootPath, 'out', 'bundle-graph.html'),
-                        sourcemap: true,
-                }),
+			filename: join(rootPath, 'out', 'bundle-graph.html'),
+			sourcemap: true,
+		}),
+		(flag_serve ? serve({
+			host: '0.0.0.0',
+			open: true,
+			verbose: true,
+			contentBase: [
+				join(rootPath, 'out'),
+				join(rootPath, 'resources'),
+			],
+			mimeTypes: {
+				'application/javascript': ['mjs'],
+			},
+		}) : undefined),
 	],
 };
-
-if (flag_serve) {
-	bundle.plugins.push(serve({
-		host: '0.0.0.0',
-		open: true,
-		verbose: true,
-		contentBase: [
-			join(rootPath, 'out'),
-			join(rootPath, 'resources'),
-		],
-		mimeTypes: {
-			'application/javascript': ['mjs'],
-		},
-	}));
-}
 
 export default [
 	bundle,
