@@ -1,6 +1,8 @@
 function chunkMap(map, debug = false) {
   return function (name) {
-    for (const [chunk, def] of Object.entries(map)) {
+    for (const def of map) {
+      const chunk = def.name;
+
       for (const include of def.includes) {
         if (name.includes(include)) {
           if (debug) {

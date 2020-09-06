@@ -1,26 +1,25 @@
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import multiEntry from '@rollup/plugin-multi-entry';
-import polyfills from 'rollup-plugin-node-polyfills';
 import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import yaml from '@rollup/plugin-yaml';
 import { join } from 'path';
 import { eslint } from 'rollup-plugin-eslint';
-import externals from 'rollup-plugin-node-externals';
 import serve from 'rollup-plugin-serve';
 import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 import visualizer from 'rollup-plugin-visualizer';
 
 const { chunkMap } = require('./map.js');
+const { plugins } = require('./project.js');
 
 const flag_debug = process.env['DEBUG'] === 'TRUE';
 const flag_devel = process.env['NODE_ENV'] === 'production';
 const flag_serve = flag_devel || process.env['SERVE'] === 'TRUE';
 
 const metadata = require('../../package.json');
-const chunks = require('./chunks.json');
+const chunks = require('./chunks.json').chunks;
 const external = require('./external.json').names;
 
 const rootPath = process.env['ROOT_PATH'];
@@ -49,12 +48,6 @@ const bundle = {
 		multiEntry(),
 		json(),
 		yaml(),
-		externals({
-			builtins: true,
-			deps: true,
-			devDeps: false,
-			peerDeps: false,
-		}),
 		replace({
 			delimiters: ['{{ ', ' }}'],
 			values: {
@@ -67,6 +60,7 @@ const bundle = {
 				PACKAGE_VERSION: metadata.version,
 			},
 		}),
+		...plugins,
 		resolve({
 			preferBuiltins: true,
 		}),
@@ -86,7 +80,6 @@ const bundle = {
 			throwOnError: true,
 			useEslintrc: false,
 		}),
-		(flag_serve ? polyfills() : undefined),
 		typescript({
 			cacheRoot: join(targetPath, 'cache', 'rts2'),
 			rollupCommonJSResolveHack: true,
