@@ -218,10 +218,10 @@
   resolved "https://artifacts.apextoaster.com/repository/group-npm/@istanbuljs/schema/-/schema-0.1.2.tgz#26520bf09abe4a5644cd5414e37125a8954241dd"
   integrity sha512-tsAQNx32a8CoFhjhijUIhI4kccIAgmGhy8LZMZgGfmXcpMbPRUqn5LWmgRttILi6yeGmBJd2xsPkFMs0PzgPCw==
 
-"@microsoft/api-documenter@7.12.7":
-  version "7.12.7"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-documenter/-/api-documenter-7.12.7.tgz#7b1742999bc083a237f78e658b3351e92012b3f7"
-  integrity sha512-GD3Z52yzDz8ZN3efB0mL2ogXLoL/I/cpoZmwLm8KiXL6o5g9K25fQ7HrFt4fvk9XTvcYX/EvZw4TBjrWz7cj5A==
+"@microsoft/api-documenter@7.12.11":
+  version "7.12.11"
+  resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-documenter/-/api-documenter-7.12.11.tgz#3409530dcb9d03a0f9715cbf4987102379dbad2c"
+  integrity sha512-FcWEVeUfYo+eGnKfm9VWZGR2PX2LWDgplcE12+ggCD6F99oTSt35EPfEXwtgownNyc3b1U7ibiNahKvBUEfKwA==
   dependencies:
     "@microsoft/api-extractor-model" "7.12.2"
     "@microsoft/tsdoc" "0.12.24"
