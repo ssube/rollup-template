@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/ssube/rollup-template/compare/v0.2.3...v0.2.4) (2021-07-10)
+
+
+### Features
+
+* **config:** include project-specific rollup plugins ([949172a](https://github.com/ssube/rollup-template/commit/949172ab541fe0bd11f46adaa3d03686db350451))
+
+
+### Bug Fixes
+
+* reduce renovate noise, automerge test deps ([a07bc4d](https://github.com/ssube/rollup-template/commit/a07bc4d90e064fc8dc0aa3fc795b598fa2d5f3a0))
+* **build:** pull images from nexus ([1075f4c](https://github.com/ssube/rollup-template/commit/1075f4cc095cac0719675d4c2afdb5358f3bf302))
+* add eslint as direct dev dep ([6fc5870](https://github.com/ssube/rollup-template/commit/6fc5870859a98067f742513a845f13c5e45dbaee))
+* **config:** split up chunk mapping, drop unused names, stubs ([43266e8](https://github.com/ssube/rollup-template/commit/43266e88b9aafe076510b7f9cc26f1bc6b3b6f5b))
+* **config:** update lint to naming-convention rule ([7abf1c3](https://github.com/ssube/rollup-template/commit/7abf1c39e2d38e155dc565181074fdba8206b9bc))
+* **docs:** comment header in PR template ([0372927](https://github.com/ssube/rollup-template/commit/0372927e56bbb64624c1709d4b379d66c72a20f4))
+* **docs:** remove isolex link in PR template ([21f0699](https://github.com/ssube/rollup-template/commit/21f069972e82930f77cd9b704be18fb14ba1ac53))
+
 ### [0.2.3](https://github.com/ssube/rollup-template/compare/v0.2.2...v0.2.3) (2019-11-11)
 
 
