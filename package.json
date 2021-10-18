@@ -22,8 +22,8 @@
   "license": "MIT",
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "1.0.1",
-    "@microsoft/api-documenter": "7.13.53",
-    "@microsoft/api-extractor": "7.18.10",
+    "@microsoft/api-documenter": "7.13.63",
+    "@microsoft/api-extractor": "7.18.16",
     "@rollup/plugin-commonjs": "20.0.0",
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-multi-entry": "4.1.0",
