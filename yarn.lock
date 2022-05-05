@@ -247,10 +247,10 @@
   resolved "https://artifacts.apextoaster.com/repository/group-npm/@istanbuljs/schema/-/schema-0.1.2.tgz#26520bf09abe4a5644cd5414e37125a8954241dd"
   integrity sha512-tsAQNx32a8CoFhjhijUIhI4kccIAgmGhy8LZMZgGfmXcpMbPRUqn5LWmgRttILi6yeGmBJd2xsPkFMs0PzgPCw==
 
-"@microsoft/api-documenter@7.17.10":
-  version "7.17.10"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-documenter/-/api-documenter-7.17.10.tgz#1069356313d1b02b78136aa9291c699c7494a52c"
-  integrity sha512-Q57Yfih6wYHs4Vq0s+AEzSAtvBnqZJW5b/+zMAvuFJyfuB4GdjdDGzWqayuK0H+iOJgvNAKrOJCuR9HpbF2koA==
+"@microsoft/api-documenter@7.17.12":
+  version "7.17.12"
+  resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-documenter/-/api-documenter-7.17.12.tgz#2596b2e2c6f12a6ebbecf7738af2ae249290a19c"
+  integrity sha512-XJq58+HwLxw5bY/YPnJnmn2rG1DXHBUIXKWWwphHj9A/sNyYxf5elbvwcsx41+MSNz07pcfW8/neyK5v05MFgA==
   dependencies:
     "@microsoft/api-extractor-model" "7.17.2"
     "@microsoft/tsdoc" "0.14.1"
@@ -269,10 +269,10 @@
     "@microsoft/tsdoc-config" "~0.16.1"
     "@rushstack/node-core-library" "3.45.4"
 
-"@microsoft/api-extractor@7.23.0":
-  version "7.23.0"
-  resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-extractor/-/api-extractor-7.23.0.tgz#8bd5a197e04b0ba92fb85e0f53b4d7cadd0a95b2"
-  integrity sha512-fbdX05RVE1EMA7nvyRHuS9nx1pryhjgURDx6pQlE/9yOXQ5PO7MpYdfWGaRsQwyYuU3+tPxgro819c0R3AK6KA==
+"@microsoft/api-extractor@7.23.1":
+  version "7.23.1"
+  resolved "https://artifacts.apextoaster.com/repository/group-npm/@microsoft/api-extractor/-/api-extractor-7.23.1.tgz#483e339cc73669c709ff215a76eb0e6d9a31de5b"
+  integrity sha512-J5cTjbMzSZPRZT4AKvFI1KmLGHVhV6bHnFcPo3Og9cN9QmknzpKg5BxvpBecEdFKNZxUpUrBkps2xOQ4Fjc6zg==
   dependencies:
     "@microsoft/api-extractor-model" "7.17.2"
     "@microsoft/tsdoc" "0.14.1"
